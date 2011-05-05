@@ -33,4 +33,4 @@ gem 'rest-open-uri'
 group :development, :test do
    gem 'rspec-rails'
    gem 'annotate-models'
- end
+end
