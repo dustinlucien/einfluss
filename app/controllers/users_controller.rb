@@ -21,7 +21,10 @@ class UsersController < ApplicationController
     num_results = num_results.sub(',','')
 
     (10..num_results.to_i).step(10).each do |start|
+			
       search_string = root_search_string + "&start=" + start.to_s
+
+			Resque.enqueue(GoogleCrawl, start, search_string)
 
       doc = Nokogiri::HTML(open(search_string, hdrs))
       doc.search('a.l').each do |link|
