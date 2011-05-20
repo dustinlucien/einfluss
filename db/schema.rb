@@ -13,9 +13,12 @@
 ActiveRecord::Schema.define(:version => 20110505224141) do
 
   create_table "users", :force => true do |t|
-    t.string   "username"
-    t.string   "name"
+    t.string   "firstname"
+    t.string   "lastname"
     t.string   "email"
+    t.string   "twitter"
+    t.string   "github"
+    t.string   "stackoverflow"
     t.string   "company"
     t.string   "location"
     t.datetime "joined"
