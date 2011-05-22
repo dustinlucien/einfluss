@@ -1,6 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+# require 'rails/all'
+
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "active_resource/railtie"
+require "rails/test_unit/railtie"
+require 'neo4j'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,6 +28,14 @@ module Einfluss
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
 
+		config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
+		config.neo4j.timestamps = false
+		
+		config.generators do |g|
+		  g.orm             :neo4j
+		  g.test_framework  :rspec, :fixture => true
+		end
+		
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'

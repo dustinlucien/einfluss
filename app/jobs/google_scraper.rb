@@ -2,6 +2,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'rest-open-uri'
 require 'uri'
+require 'github_api'
 
 class GoogleScraper
 	@hdrs = {"Accept-Charset"=>"utf-8", "Accept"=>"text/html"}
@@ -23,19 +24,25 @@ class GoogleScraper
 		  doc = Nokogiri::HTML(open(@root_search_string + "&start=" + start.to_s, @hdrs))
 			self.extract_github(doc)
 			#add a sleep to the thread to protect from google throttling
-			sleep 0.25
+			sleep 0.15
 		end
 	end
 	
 	def self.extract_github(doc)
 		doc.search('a.l').each do |link|
 			uri = URI.parse(link['href'].strip())
-			github_handle = uri.path.gsub('/','')
-			puts "The github handle is " + github_handle
+			gid = uri.path.gsub('/','')
+			puts "The github handle is " + gid
+
+			gp = GitHubApi.get_profile(gid)
 			
-			user = User.find_by_github(github_handle)
-			if (!user)
-				user = User.create(
+			puts "profile returned"
+			puts gp.to_s
+			
+			if (gp != nil)
+				if (!Person.find_by_github(gid))
+					Person.create(:name => gp['name'], :github => gid, :github_type => gp['type'], :location => gp['location'])
+				end
 			end
 		end
 	end

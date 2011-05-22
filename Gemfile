@@ -1,17 +1,30 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.7'
+gem 'rails'
+gem 'rake', '0.8.7'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+platforms :jruby do
+  gem 'trinidad'
+  gem 'jruby-openssl'
+#  gem 'jdbc-sqlite3'
+#  gem 'activerecord-jdbcsqlite3-adapter'
+  gem 'ffi-ncurses'
+  gem 'neo4j'
+#  gem 'pacer'
+end
+
+platforms :ruby_18, :ruby_19 do
+  gem 'sqlite3'
+end
 
 # Use unicorn as the web server
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
@@ -20,10 +33,11 @@ gem 'sqlite3'
 # Bundle the extra gems:
 # gem 'bj'
 
+
 gem 'nokogiri'
-gem 'pacer'
 gem 'rest-open-uri'
 gem 'resque'
+
 
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
