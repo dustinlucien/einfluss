@@ -1,5 +1,5 @@
 class Person < Neo4j::Model
-	property :name, :email, :github, :github_type, :location, :latitude, :longitude
+	property :name, :email, :company, :github, :github_type, :location, :latitude, :longitude
 	
 	index :github
 	index :location
