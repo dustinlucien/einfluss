@@ -5,8 +5,9 @@ require 'uri'
 require 'github_api'
 
 class GoogleScraper
-	@hdrs = {"Accept-Charset"=>"utf-8", "Accept"=>"text/html"}
-  @root_search_string = "http://www.google.com/search?hl=en&source=hp&biw=1126&bih=1024&q=site%3Agithub.com+profile+&aq=f&aqi=&aql=f&oq="
+	@hdrs = {"Accept-Charset"=>"utf-8", "Accept"=>"text/html", "User-Agent"=>"Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.127 Safari/534.16"}
+	
+  @root_search_string = "http://www.google.com/search?q=site%3Agithub.com+profile+-+GitHub"
 	@gh_api = GitHubApi.new()
 	
 	def self.scrape()
@@ -23,7 +24,8 @@ class GoogleScraper
 		  #I guess i thought i could fork threads for each of these.  oops
 		  doc = Nokogiri::HTML(open(@root_search_string + "&start=" + start.to_s, @hdrs))
 			self.extract_github(doc)
-			#add a sleep to the thread to protect from google throttling
+			
+			sleep 1 + rand(20)
 		end
 	end
 	
@@ -31,20 +33,31 @@ class GoogleScraper
 		doc.search('a.l').each do |link|
 			uri = URI.parse(link['href'].strip())
 			gid = uri.path.gsub('/','')
-			puts "The github handle is " + gid
 
-			gp = @gh_api.get_profile(gid)
-			
-			if (gp.nil?)
-				puts "no profile returned for " + gid
-			else
-				puts "profile returned for " + gid
-				puts gp.to_s
-			
-				if (!Person.find_by_github(gid))
-					Person.create!(:name => gp['name'], :email => gp['email'], :company => gp['company'], :github => gid, :github_type => gp['type'], :location => gp['location'])
-				end
+			if validate_github_id(gid)
+				puts gid
 			end
 		end
+	end
+	
+	def self.validate_github_id(gid)
+		
+		if gid.match(/[0-9].*/) != nil
+			return false
+		end
+		
+		if gid.ends_with?(".htm") 
+			return false
+		end
+		
+		if gid.end_with?(".html") 
+			return false
+		end
+		
+		if gid.length > 40 
+			return false
+		end
+		
+		true
 	end
 end

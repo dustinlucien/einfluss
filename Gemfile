@@ -37,7 +37,7 @@ gem 'capistrano'
 gem 'nokogiri'
 gem 'rest-open-uri'
 gem 'resque'
-
+gem 'bossman'
 
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'

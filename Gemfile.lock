@@ -30,6 +30,8 @@ GEM
     activesupport (3.0.7)
     annotate-models (1.0.4)
     arel (2.0.10)
+    bossman (0.4.1)
+      activesupport (>= 2.1.0)
     bouncy-castle-java (1.5.0146.1)
     builder (2.1.2)
     capistrano (2.6.0)
@@ -135,6 +137,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate-models
+  bossman
   capistrano
   ffi-ncurses
   jruby-openssl

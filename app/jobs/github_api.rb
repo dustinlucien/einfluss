@@ -3,12 +3,7 @@ require 'rest-open-uri'
 class GitHubApi
 	attr_accessor :requests_remaining
 
-	def initialize()	
-		@hdrs = {"Accept-Charset"=>"utf-8", "Accept"=>"text/json"}
-		@requests_remaining = 0
-	end
-	
-	def get_profile(username)
+	def self.get_profile(username)
 		request_url = "http://github.com/api/v2/json/user/show/" + username
 
 		response = open_url(request_url)
@@ -22,7 +17,7 @@ class GitHubApi
 		
 	end
 
-	def get_following(username)
+	def self.get_following(username)
 		request_url = "http://github.com/api/v2/json/user/show/" + username + "/following"
 		
 		response = open_url(request_url)
@@ -34,7 +29,7 @@ class GitHubApi
 		JSON.parse(response)
 	end
 	
-	def get_followers(username)
+	def self.get_followers(username)
 		request_url = "http://github.com/api/v2/json/user/show/" + username + "/followers"
 		
 		response = open_url(request_url)
@@ -47,19 +42,19 @@ class GitHubApi
 	end
 	
 	
-	def open_url(url)
+	def self.open_url(url)
 		response = nil
 		begin
 			response = open(url)
 		
-			@requests_remaining = response.meta['x-ratelimit-remaining'].to_i
+			requests_remaining = response.meta['x-ratelimit-remaining'].to_i
 		
-			puts "GitHub Requests Remaining => " + @requests_remaining.to_s
+			puts "GitHub Requests Remaining => " + requests_remaining.to_s
 			
 			response = response.read
 		rescue OpenURI::HTTPError => e
 		
-		  if @requests_remaining == 0
+		  if requests_remaining == 0
 		  	puts "sleeping..."
 				sleep 30
 				retry

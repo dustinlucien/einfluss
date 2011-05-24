@@ -4,7 +4,9 @@ class Person < Neo4j::Model
 	index :github
 	index :location
 	
-	has_n :follows
+	has_n :following
+	has_n :followers
+	
 	has_n :repositories
 	has_n :owner
 	
