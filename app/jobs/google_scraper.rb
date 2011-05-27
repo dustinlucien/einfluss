@@ -19,14 +19,21 @@ class GoogleScraper
 
 		num_results = doc.search('div#resultStats')[0].content[/([0-9]{1,3}),([0-9]{1,3})/]
 		num_results = num_results.sub(',','')
-		  
-		(10..num_results.to_i).step(10).each do |start|
-		  #I guess i thought i could fork threads for each of these.  oops
-		  doc = Nokogiri::HTML(open(@root_search_string + "&start=" + start.to_s, @hdrs))
-			self.extract_github(doc)
-			
+		
+		self.extract_github(doc)
+		
+		pages = 1
+		
+		do
 			sleep 1 + rand(20)
-		end
+			doc = Nokogiri::HTML(open(next_url, @hdrs))			
+			self.extract_github(doc)
+			next_url = self.extract_next_url(doc)
+			pages++
+			puts "pages >> " + pages.to_s
+
+		while next_url != nil
+		
 	end
 	
 	def self.extract_github(doc)
@@ -38,6 +45,16 @@ class GoogleScraper
 				puts gid
 			end
 		end
+	end
+	
+	def self.extract_next_url(doc)
+		link = doc.search('a#pnnext')
+
+		if (link != nil)
+			link = "http://www.google.com" + link['href']
+		end
+		
+		return link
 	end
 	
 	def self.validate_github_id(gid)
