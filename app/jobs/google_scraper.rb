@@ -24,16 +24,18 @@ class GoogleScraper
 		
 		pages = 1
 		
-		do
+		next_url = self.extract_next_url(doc)
+		
+		while !next_url.nil?
 			sleep 1 + rand(20)
 			doc = Nokogiri::HTML(open(next_url, @hdrs))			
 			self.extract_github(doc)
-			next_url = self.extract_next_url(doc)
-			pages++
+			pages = pages + 1
+			
 			puts "pages >> " + pages.to_s
 
-		while next_url != nil
-		
+			next_url = self.extract_next_url(doc)
+		end		
 	end
 	
 	def self.extract_github(doc)
@@ -48,13 +50,14 @@ class GoogleScraper
 	end
 	
 	def self.extract_next_url(doc)
-		link = doc.search('a#pnnext')
+		doc.search('a#pnnext').each do |link|
+			href = nil
+			if (link != nil)
+				href = "http://www.google.com" + link['href'].strip()
+			end
 
-		if (link != nil)
-			link = "http://www.google.com" + link['href']
+			return href
 		end
-		
-		return link
 	end
 	
 	def self.validate_github_id(gid)
