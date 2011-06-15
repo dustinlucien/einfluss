@@ -62,9 +62,9 @@ class GoogleScraper
 	
 	def self.validate_github_id(gid)
 		
-		if gid.match(/[0-9].*/) != nil
-			return false
-		end
+#		if gid.match(/[0-9].*/) != nil
+#			return false
+#		end
 		
 		if gid.ends_with?(".htm") 
 			return false

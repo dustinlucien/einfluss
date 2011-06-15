@@ -8,4 +8,9 @@ namespace :scrape do
 	task :scrape_yahoo => :environment do
 		YahooScraper.scrape()
 	end
+	
+	desc "build relationships from data file"
+	task :build_graph => :environment do
+		RelationshipBuilder.build()
+	end
 end

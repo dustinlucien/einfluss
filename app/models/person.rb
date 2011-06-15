@@ -1,5 +1,6 @@
 class Person < Neo4j::Model
-	property :name, :email, :company, :github, :github_type, :location, :latitude, :longitude
+	property :name, :email, :company, :github, :github_type
+	property :location, :latitude, :longitude
 	
 	index :github
 	index :location
@@ -7,14 +8,11 @@ class Person < Neo4j::Model
 	has_n :following
 	has_n :followers
 	
-	has_n :repositories
-	has_n :owner
-	
+	has_n :repos
+
 	has_n :watching
 	
-	has_n(:forks).from(:forkers)
-	
-	def self.create_or_find_by_github(github)
+	def self.find_or_create_by_github(github)
 		github.downcase!
 		person = Person.find_by_github(github)
 		person ||= begin
@@ -24,7 +22,7 @@ class Person < Neo4j::Model
 		person
 	end
 
-	def self.create_or_find_by_email(email)
+	def self.find_or_create_by_email(email)
 		email.downcase!
 		person = Person.find_by_email(email)
 		person ||= begin

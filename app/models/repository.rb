@@ -7,6 +7,6 @@ class Repository < Neo4j::Model
 
 	has_n(:watchers).from(:watching)
 	
-	has_one(:owned_by).from(:owner)
+	has_one(:owner).from(:repos)
 	
 end
